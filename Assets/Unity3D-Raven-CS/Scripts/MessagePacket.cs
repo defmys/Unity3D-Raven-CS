@@ -35,11 +35,21 @@ namespace Unity3DRavenCS
 
 		public MessagePacket()
 		{
+			this.eventID = System.Guid.NewGuid().ToString("N");
 		}
 
 		public string ToJson()
 		{
 			return JsonUtility.ToJson(this);
 		}
+
+	}
+
+
+
+	[Serializable]
+	public struct ResponsePacket
+	{
+		public string id;
 	}
 }
