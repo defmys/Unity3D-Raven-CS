@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.IO;
+using System;
 
 namespace Unity3DRavenCS {
 
@@ -75,6 +76,15 @@ namespace Unity3DRavenCS {
 					}
 				}
 			}
+
+			return resultId;
+		}
+
+		public string captureException(Exception exception)
+		{
+			string resultId = "";
+
+			RavenException ravenException = new RavenException(exception);
 
 			return resultId;
 		}
