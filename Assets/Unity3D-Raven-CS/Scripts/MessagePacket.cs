@@ -37,7 +37,7 @@ namespace Unity3DRavenCS
 		{
 			this.event_id = System.Guid.NewGuid().ToString("N");
 			this.sdk.name = "Unity3D-Raven-CS";
-			this.sdk.version = "0.0.1";
+			this.sdk.version = Version.VERSION;
 		}
 
 		public string ToJson()
