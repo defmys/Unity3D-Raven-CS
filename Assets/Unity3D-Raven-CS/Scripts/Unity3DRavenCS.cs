@@ -5,14 +5,20 @@ using System.Net;
 using System.IO;
 
 namespace Unity3DRavenCS {
-	using RavenOptionType = Dictionary<string, string>;
+
+
+	public class RavenOptionType
+	{
+		public int timeout = 5000;
+	}
+
 
 	public class Unity3DRavenCS {
 		private DSN m_dsn;
 		private bool m_valid;
-		private RavenOptionType m_options;
+		private RavenOptionType m_option;
 
-		public Unity3DRavenCS(string dsnUri)
+		public Unity3DRavenCS(string dsnUri, RavenOptionType option = null)
 		{
 			m_dsn = new DSN(dsnUri);
 			if (!m_dsn.isValid) {
@@ -20,6 +26,8 @@ namespace Unity3DRavenCS {
 				Debug.Log ("Unity3DRavenCS is disabled because the DSN is invalid.");
 			} else {
 				m_valid = true;
+
+				m_option = option == null ? new RavenOptionType() : option;
 			}
 		}
 
@@ -35,6 +43,8 @@ namespace Unity3DRavenCS {
 
 				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(m_dsn.sentryUri);
 				request.Method = "POST";
+				request.Timeout = m_option.timeout;
+				request.ReadWriteTimeout = m_option.timeout;
 				request.Accept = "application/json";
 				request.ContentType = "application/json; charset=utf-8";
 				request.Headers.Add("X-Sentry-Auth", m_dsn.XSentryAuthHeader());
