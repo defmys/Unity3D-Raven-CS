@@ -10,6 +10,7 @@ namespace Unity3DRavenCS {
 	public class RavenOptionType
 	{
 		public int timeout = 5000;
+		LogType logType = LogType.Log;
 	}
 
 
@@ -37,7 +38,7 @@ namespace Unity3DRavenCS {
 
 			if (m_valid) 
 			{
-				MessagePacket packet = new MessagePacket ();
+				MessagePacket packet = new MessagePacket(LogType.Log);
 				packet.message = message;
 
 
