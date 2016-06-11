@@ -9,7 +9,7 @@ namespace Unity3DRavenCS
 	public class MessagePacket
 	{
 
-		public string eventID;
+		public string event_id;
 		public string message;
 		public string timestamp;
 		public string level;
@@ -35,7 +35,9 @@ namespace Unity3DRavenCS
 
 		public MessagePacket()
 		{
-			this.eventID = System.Guid.NewGuid().ToString("N");
+			this.event_id = System.Guid.NewGuid().ToString("N");
+			this.sdk.name = "Unity3D-Raven-CS";
+			this.sdk.version = "0.0.1";
 		}
 
 		public string ToJson()
