@@ -2,6 +2,7 @@
 using System.Net;
 using System.IO;
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Unity3DRavenCS {
@@ -31,13 +32,13 @@ namespace Unity3DRavenCS {
 			}
 		}
 
-		public string CaptureMessage(string message, LogType logType = LogType.Error)
+		public string CaptureMessage(string message, LogType logType=LogType.Error, Dictionary<string, string> tags=null)
 		{
 			string resultId = "";
 
 			if (m_valid) 
 			{
-				MessagePacket packet = new MessagePacket(message, logType);
+				MessagePacket packet = new MessagePacket(message, logType, tags);
 
                 Send(packet.ToJson());
 			}
@@ -45,13 +46,13 @@ namespace Unity3DRavenCS {
 			return resultId;
 		}
 
-		public string CaptureException(Exception exception)
+		public string CaptureException(Exception exception, Dictionary<string, string> tags = null)
 		{
 			string resultId = "";
 
             if (m_valid)
             {
-                ExceptionPacket paket = new ExceptionPacket(exception);
+                ExceptionPacket paket = new ExceptionPacket(exception, tags);
 
                 Send(paket.ToJson());
             }

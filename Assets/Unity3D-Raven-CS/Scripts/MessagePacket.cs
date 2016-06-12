@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 
@@ -28,10 +29,12 @@ namespace Unity3DRavenCS
         public string message;
         public string timestamp;
         public string platform;
+        public Dictionary<string, string> tags;
 
-        public Packet()
+        public Packet(string message, Dictionary<string, string> tags)
         {
             this.event_id = System.Guid.NewGuid().ToString("N");
+            this.message = message;
             this.platform = "csharp";
             this.sdk.name = "Unity3D-Raven-CS";
             this.sdk.version = Version.VERSION;
@@ -39,6 +42,7 @@ namespace Unity3DRavenCS
             this.device.name = SystemInfo.operatingSystem;
             this.device.version = "0";
             this.device.build = "";
+            this.tags = tags;
         }
 
         public virtual string ToJson()
@@ -52,9 +56,8 @@ namespace Unity3DRavenCS
 		public string level;
 		public string logger;
 
-		public MessagePacket(string message, LogType logType = LogType.Error)
+        public MessagePacket(string message, LogType logType, Dictionary<string, string> tags): base(message, tags)
 		{
-            this.message = message;
 			this.level = ToLogLevelFromLogType(logType);
 		}
 
@@ -87,10 +90,9 @@ namespace Unity3DRavenCS
     {
         public RavenException exception;
 
-        public ExceptionPacket(Exception exception)
+        public ExceptionPacket(Exception exception, Dictionary<string, string> tags): base(exception.Message, tags)
         {
             this.exception = new RavenException(exception);
-            this.message = exception.Message;
         }
     }
 
