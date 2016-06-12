@@ -47,7 +47,7 @@ namespace Unity3DRavenCS {
 			return resultId;
 		}
 
-		public string captureException(Exception exception)
+		public string CaptureException(Exception exception)
 		{
 			string resultId = "";
 
