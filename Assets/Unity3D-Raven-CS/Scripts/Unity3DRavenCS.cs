@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using System.IO;
 using System;
+using Newtonsoft.Json;
 
 namespace Unity3DRavenCS {
 
@@ -90,7 +89,7 @@ namespace Unity3DRavenCS {
                         using (StreamReader streamReader = new StreamReader(responseStream))
                         {
                             string responseContent = streamReader.ReadToEnd();
-                            ResponsePacket responsePacket = JsonUtility.FromJson<ResponsePacket>(responseContent);
+                            ResponsePacket responsePacket = JsonConvert.DeserializeObject<ResponsePacket>(responseContent);
                             resultId = responsePacket.id;
                         }
                     }
