@@ -38,8 +38,7 @@ namespace Unity3DRavenCS {
 
 			if (m_valid) 
 			{
-				MessagePacket packet = new MessagePacket(logType);
-				packet.message = message;
+				MessagePacket packet = new MessagePacket(message, logType);
 
                 Send(packet.ToJson());
 			}

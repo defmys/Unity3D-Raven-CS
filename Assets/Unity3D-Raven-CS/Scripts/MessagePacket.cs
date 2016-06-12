@@ -8,6 +8,40 @@ namespace Unity3DRavenCS
     [Serializable]
     public abstract class Packet
     {
+        [Serializable]
+        public struct SDK
+        {
+            public string name;
+            public string version;
+        }
+        public SDK sdk = new SDK();
+        
+        [Serializable]
+        public struct Device
+        {
+            public string name;
+            public string version;
+            public string build;
+        }
+        public Device device = new Device();
+
+        public string event_id;
+        public string message;
+        public string timestamp;
+        public string platform;
+
+        public Packet()
+        {
+            this.event_id = System.Guid.NewGuid().ToString("N");
+            this.platform = "csharp";
+            this.sdk.name = "Unity3D-Raven-CS";
+            this.sdk.version = Version.VERSION;
+            this.timestamp = DateTime.UtcNow.ToString("s");
+            this.device.name = SystemInfo.operatingSystem;
+            this.device.version = "0";
+            this.device.build = "";
+        }
+
         public virtual string ToJson()
         {
             return JsonUtility.ToJson(this);
@@ -16,41 +50,13 @@ namespace Unity3DRavenCS
 
 	public class MessagePacket: Packet
 	{
-		public string event_id;
-		public string message;
-		public string timestamp;
 		public string level;
 		public string logger;
-		public string platform;
 
-		[Serializable]
-		public struct SDK
+		public MessagePacket(string message, LogType logType = LogType.Error)
 		{
-			public string name;
-			public string version;
-		}
-		public SDK sdk = new SDK();
-
-		[Serializable]
-		public struct Device
-		{
-			public string name;
-			public string version;
-			public string build;
-		}
-		public Device device = new Device();
-
-		public MessagePacket(LogType logType = LogType.Error)
-		{
-			this.event_id = System.Guid.NewGuid().ToString("N");
-			this.sdk.name = "Unity3D-Raven-CS";
-			this.sdk.version = Version.VERSION;
-			this.platform = "csharp";
+            this.message = message;
 			this.level = ToLogLevelFromLogType(logType);
-			this.timestamp = DateTime.UtcNow.ToString("s");
-			this.device.name = SystemInfo.operatingSystem;
-			this.device.version = "0";
-			this.device.build = "";
 		}
 
 		private string ToLogLevelFromLogType(LogType logType)
@@ -81,7 +87,6 @@ namespace Unity3DRavenCS
     public class ExceptionPacket: Packet
     {
         public RavenException exception;
-        public string message;
 
         public ExceptionPacket(Exception exception)
         {
