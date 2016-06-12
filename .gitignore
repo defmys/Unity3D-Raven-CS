@@ -3,3 +3,5 @@ Assembly-CSharp.csproj
 Temp
 Unity3D-Raven-CS.sln
 obj
+*.csproj
+.vs
