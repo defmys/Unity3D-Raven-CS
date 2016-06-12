@@ -4,10 +4,8 @@ using System.Collections.Generic;
 
 namespace Unity3DRavenCS
 {
-	[Serializable]
 	public class RavenStackTrace
 	{
-		[Serializable]
 		public struct RavenFrame
 		{
 			public string filename;

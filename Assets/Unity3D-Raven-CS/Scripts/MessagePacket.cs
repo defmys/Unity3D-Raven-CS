@@ -1,28 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 
 namespace Unity3DRavenCS
 {
-    [Serializable]
     public abstract class Packet
     {
-        [Serializable]
         public struct SDK
         {
             public string name;
             public string version;
         }
+
         public SDK sdk = new SDK();
         
-        [Serializable]
         public struct Device
         {
             public string name;
             public string version;
             public string build;
         }
+
         public Device device = new Device();
 
         public string event_id;
@@ -44,7 +43,7 @@ namespace Unity3DRavenCS
 
         public virtual string ToJson()
         {
-            return JsonUtility.ToJson(this);
+            return JsonConvert.SerializeObject(this);
         }
     }
 
@@ -95,8 +94,7 @@ namespace Unity3DRavenCS
         }
     }
 
-
-	[Serializable]
+    
 	public struct ResponsePacket
 	{
 		public string id;
