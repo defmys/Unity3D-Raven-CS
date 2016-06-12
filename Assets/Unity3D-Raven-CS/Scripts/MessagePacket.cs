@@ -5,10 +5,17 @@ using UnityEngine;
 
 namespace Unity3DRavenCS
 {
-	[Serializable]
-	public class MessagePacket
-	{
+    [Serializable]
+    public abstract class Packet
+    {
+        public virtual string ToJson()
+        {
+            return JsonUtility.ToJson(this);
+        }
+    }
 
+	public class MessagePacket: Packet
+	{
 		public string event_id;
 		public string message;
 		public string timestamp;
@@ -46,11 +53,6 @@ namespace Unity3DRavenCS
 			this.device.build = "";
 		}
 
-		public string ToJson()
-		{
-			return JsonUtility.ToJson(this);
-		}
-
 		private string ToLogLevelFromLogType(LogType logType)
 		{
 			string logLevel;
@@ -75,6 +77,18 @@ namespace Unity3DRavenCS
 		}
 	}
 
+ 
+    public class ExceptionPacket: Packet
+    {
+        public RavenException exception;
+        public string message;
+
+        public ExceptionPacket(Exception exception)
+        {
+            this.exception = new RavenException(exception);
+            this.message = exception.Message;
+        }
+    }
 
 
 	[Serializable]

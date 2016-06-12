@@ -1,21 +1,25 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Unity3DRavenCS
 {
+    [Serializable]
 	public class RavenException
 	{
-		private string m_message = "";
-		public string message 
-		{
-			get { return m_message; }
-		}
-
-		private RavenStackTrace m_stackTrace;
+		public RavenStackTrace stacktrace;
+        public string value;
+        public string type;
 		
 		public RavenException(Exception exception)
 		{
-			m_message = exception.Message;
-			m_stackTrace = new RavenStackTrace(exception);
-		}
+            this.stacktrace = new RavenStackTrace(exception);
+            this.value = exception.Message;
+            this.type = exception.GetType().ToString();
+        }
+
+        public string ToJson()
+        {
+            return JsonUtility.ToJson(this);
+        }
 	}
 }

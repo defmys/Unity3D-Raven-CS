@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Unity3DRavenCS
 {
@@ -32,8 +31,6 @@ namespace Unity3DRavenCS
 			{
 				frames.Add(new RavenFrame(frame));
 			}
-
-			UnityEngine.Debug.Log(JsonUtility.ToJson (this));
 		}
 	}
 }

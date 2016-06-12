@@ -42,39 +42,7 @@ namespace Unity3DRavenCS {
 				MessagePacket packet = new MessagePacket(LogType.Log);
 				packet.message = message;
 
-
-				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(m_dsn.sentryUri);
-				request.Method = "POST";
-				request.Timeout = m_option.timeout;
-				request.ReadWriteTimeout = m_option.timeout;
-				request.Accept = "application/json";
-				request.ContentType = "application/json; charset=utf-8";
-				request.Headers.Add("X-Sentry-Auth", m_dsn.XSentryAuthHeader());
-				request.UserAgent = m_dsn.UserAgent();
-
-				using (Stream requestStream = request.GetRequestStream ()) 
-				{
-					using (StreamWriter streamWriter = new StreamWriter(requestStream)) 
-					{
-						streamWriter.Write(packet.ToJson());
-					}
-				}
-
-				using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-				{
-					using (Stream responseStream = response.GetResponseStream())
-					{
-						if (responseStream != null)
-						{
-							using (StreamReader streamReader = new StreamReader(responseStream))
-							{
-								string responseContent = streamReader.ReadToEnd();
-								ResponsePacket responsePacket = JsonUtility.FromJson<ResponsePacket>(responseContent);
-								resultId = responsePacket.id;
-							}
-						}
-					}
-				}
+                Send(packet.ToJson());
 			}
 
 			return resultId;
@@ -84,9 +52,54 @@ namespace Unity3DRavenCS {
 		{
 			string resultId = "";
 
-			RavenException ravenException = new RavenException(exception);
+            if (m_valid)
+            {
+                ExceptionPacket paket = new ExceptionPacket(exception);
+
+                Send(paket.ToJson());
+            }
 
 			return resultId;
 		}
+
+        private string Send(string payload)
+        {
+            string resultId = "";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(m_dsn.sentryUri);
+            request.Method = "POST";
+            request.Timeout = m_option.timeout;
+            request.ReadWriteTimeout = m_option.timeout;
+            request.Accept = "application/json";
+            request.ContentType = "application/json; charset=utf-8";
+            request.Headers.Add("X-Sentry-Auth", m_dsn.XSentryAuthHeader());
+            request.UserAgent = m_dsn.UserAgent();
+
+            using (Stream requestStream = request.GetRequestStream())
+            {
+                using (StreamWriter streamWriter = new StreamWriter(requestStream))
+                {
+                    streamWriter.Write(payload);
+                }
+            }
+
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            {
+                using (Stream responseStream = response.GetResponseStream())
+                {
+                    if (responseStream != null)
+                    {
+                        using (StreamReader streamReader = new StreamReader(responseStream))
+                        {
+                            string responseContent = streamReader.ReadToEnd();
+                            ResponsePacket responsePacket = JsonUtility.FromJson<ResponsePacket>(responseContent);
+                            resultId = responsePacket.id;
+                        }
+                    }
+                }
+            }
+
+            return resultId;
+        }
 	}
 }
