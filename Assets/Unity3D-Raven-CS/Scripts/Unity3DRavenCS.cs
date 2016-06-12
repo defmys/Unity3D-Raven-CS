@@ -11,7 +11,6 @@ namespace Unity3DRavenCS {
 	public class RavenOptionType
 	{
 		public int timeout = 5000;
-		LogType logType = LogType.Log;
 	}
 
 
@@ -33,13 +32,13 @@ namespace Unity3DRavenCS {
 			}
 		}
 
-		public string CaptureMessage(string message)
+		public string CaptureMessage(string message, LogType logType = LogType.Error)
 		{
 			string resultId = "";
 
 			if (m_valid) 
 			{
-				MessagePacket packet = new MessagePacket(LogType.Log);
+				MessagePacket packet = new MessagePacket(logType);
 				packet.message = message;
 
                 Send(packet.ToJson());
