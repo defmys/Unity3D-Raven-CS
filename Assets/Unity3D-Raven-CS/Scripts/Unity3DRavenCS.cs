@@ -60,6 +60,20 @@ namespace Unity3DRavenCS {
 			return resultId;
 		}
 
+        public string CaptureException(string message, string stackTrace, Dictionary<string, string> tags = null)
+        {
+            string resultId = "";
+
+            if (m_valid)
+            {
+                ExceptionPacket paket = new ExceptionPacket(message, stackTrace, tags);
+
+                Send(paket.ToJson());
+            }
+
+            return resultId;
+        }
+
         private string Send(string payload)
         {
             string resultId = "";

@@ -94,6 +94,11 @@ namespace Unity3DRavenCS
         {
             this.exception = new RavenException(exception);
         }
+
+        public ExceptionPacket(string message, string stackTrace, Dictionary<string, string> tags) : base(message, tags)
+        {
+            this.exception = new RavenException(message, stackTrace);
+        }
     }
 
     
