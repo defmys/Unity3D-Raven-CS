@@ -44,7 +44,7 @@ namespace Unity3DRavenCS
 
         public RavenStackTrace(string stackTrace)
         {
-            Regex reg = new Regex(@"([\w\d\._\-\s\(\)]+)\s+\(at\s([\w\d\/\-_\.]+):([\d]+)\)\n", RegexOptions.IgnoreCase);
+            Regex reg = new Regex(@"([\w\d\._\-\s\(\)]+)\s+\(at\s([\w\d\/\-_\.:]+):([\d]+)\)\n", RegexOptions.IgnoreCase);
             var matches = reg.Matches(stackTrace);
             foreach (Match match in matches)
             {
