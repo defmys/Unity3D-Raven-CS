@@ -39,7 +39,7 @@ namespace Unity3DRavenCS
             this.sdk.name = "Unity3D-Raven-CS";
             this.sdk.version = Version.VERSION;
             this.timestamp = DateTime.UtcNow.ToString("s");
-            this.device.name = SystemInfo.operatingSystem;
+            this.device.name = "";
             this.device.version = "0";
             this.device.build = "";
             this.tags = tags;
