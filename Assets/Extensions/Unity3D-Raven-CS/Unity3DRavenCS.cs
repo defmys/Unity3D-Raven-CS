@@ -4,6 +4,7 @@ using System.IO;
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using ICSharpCode.SharpZipLib.GZip;
 
 namespace Unity3DRavenCS {
 
@@ -11,6 +12,7 @@ namespace Unity3DRavenCS {
 	public class RavenOptionType
 	{
 		public int timeout = 5000;
+        public bool compression = true;
 	}
 
 
@@ -87,11 +89,27 @@ namespace Unity3DRavenCS {
             request.Headers.Add("X-Sentry-Auth", m_dsn.XSentryAuthHeader());
             request.UserAgent = m_dsn.UserAgent();
 
+            if (m_option.compression)
+            {
+                request.Headers.Add("Content-Encoding", "gzip");
+            }
+
             using (Stream requestStream = request.GetRequestStream())
             {
-                using (StreamWriter streamWriter = new StreamWriter(requestStream))
+                if (m_option.compression)
                 {
-                    streamWriter.Write(payload);
+                    byte[] payloadBuffer = System.Text.Encoding.UTF8.GetBytes(payload);
+                    using (GZipOutputStream gzipStream = new GZipOutputStream(requestStream))
+                    {
+                        gzipStream.Write(payloadBuffer, 0, payloadBuffer.Length);
+                    }
+                }
+                else
+                {
+                    using (StreamWriter streamWriter = new StreamWriter(requestStream))
+                    {
+                        streamWriter.Write(payload);
+                    }
                 }
             }
 
