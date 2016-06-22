@@ -42,7 +42,7 @@ namespace Unity3DRavenCS {
 			{
 				MessagePacket packet = new MessagePacket(message, logType, tags);
 
-                Send(packet.ToJson());
+				resultId = Send(packet.ToJson());
 			}
 
 			return resultId;
@@ -56,7 +56,7 @@ namespace Unity3DRavenCS {
             {
                 ExceptionPacket paket = new ExceptionPacket(exception, tags);
 
-                Send(paket.ToJson());
+				resultId = Send(paket.ToJson());
             }
 
 			return resultId;
