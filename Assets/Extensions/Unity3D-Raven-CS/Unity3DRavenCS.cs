@@ -50,19 +50,24 @@ namespace Unity3DRavenCS {
 
 		public string CaptureException(Exception exception, Dictionary<string, string> tags = null)
 		{
-			string resultId = "";
-
-            if (m_valid)
-            {
-                ExceptionPacket paket = new ExceptionPacket(exception, tags);
-
-				resultId = Send(paket.ToJson());
-            }
-
-			return resultId;
+            return CaptureException(exception.Message, new System.Diagnostics.StackTrace(exception, true) , tags);
 		}
 
         public string CaptureException(string message, string stackTrace, Dictionary<string, string> tags = null)
+        {
+            string resultId = "";
+
+            if (m_valid)
+            {
+                ExceptionPacket paket = new ExceptionPacket(message, stackTrace, tags);
+
+                resultId = Send(paket.ToJson());
+            }
+
+            return resultId;
+        }
+
+        public string CaptureException(string message, System.Diagnostics.StackTrace stackTrace, Dictionary<string, string> tags = null)
         {
             string resultId = "";
 

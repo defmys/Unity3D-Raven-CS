@@ -42,17 +42,41 @@ namespace Unity3DRavenCS
 			}
 		}
 
+        public RavenStackTrace(StackTrace stackTrace)
+        {
+            foreach (var frame in stackTrace.GetFrames())
+            {
+                frames.Add(new RavenFrame(frame));
+            }
+        }
+
         public RavenStackTrace(string stackTrace)
         {
             Regex reg = new Regex(@"([\w\d\._\-\s\(\)]+)\s+\(at\s([\w\d\/\-_\.:]+):([\d]+)\)\n", RegexOptions.IgnoreCase);
             var matches = reg.Matches(stackTrace);
+
+            if (matches.Count > 0)
+            {
+                BuildFrames(matches, 4);
+            }
+            else
+            {
+                reg = new Regex(@"[\s*at\s*]*([\w\d\._\-\s\(\),\`]+?)[\s]*\n", RegexOptions.IgnoreCase);
+                matches = reg.Matches(stackTrace);
+
+                BuildFrames(matches, 2);
+            }
+        }
+
+        private void BuildFrames(MatchCollection matches, int groupCount)
+        {
             foreach (Match match in matches)
             {
-                if (match.Groups.Count == 4)
+                if (match.Groups.Count == groupCount)
                 {
-                    string function = match.Groups[1].Value;
-                    string filename = match.Groups[2].Value;
-                    int lineno = Convert.ToInt32(match.Groups[3].Value);
+                    string function = groupCount > 1 ? match.Groups[1].Value : "";
+                    string filename = groupCount > 2 ? match.Groups[2].Value : "";
+                    int lineno = groupCount > 3 ? Convert.ToInt32(match.Groups[3].Value) : 0;
                     int colno = 0;
                     frames.Add(new RavenFrame(filename, function, lineno, colno));
                 }

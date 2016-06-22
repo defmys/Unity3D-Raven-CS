@@ -22,5 +22,12 @@ namespace Unity3DRavenCS
             this.value = message;
             this.type = message;
         }
-	}
+
+        public RavenException(string message, System.Diagnostics.StackTrace stackTrace)
+        {
+            this.stacktrace = new RavenStackTrace(stackTrace);
+            this.value = message;
+            this.type = message;
+        }
+    }
 }
