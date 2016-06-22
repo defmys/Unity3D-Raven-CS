@@ -70,7 +70,7 @@ namespace Unity3DRavenCS {
             {
                 ExceptionPacket paket = new ExceptionPacket(message, stackTrace, tags);
 
-                Send(paket.ToJson());
+                resultId = Send(paket.ToJson());
             }
 
             return resultId;
