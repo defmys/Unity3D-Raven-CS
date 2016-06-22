@@ -21,6 +21,11 @@ namespace Unity3DRavenCS {
 		private bool m_valid;
 		private RavenOptionType m_option;
 
+        /// <summary>
+        /// Construct raven client. The client is disabled if the DSN is invalid.
+        /// </summary>
+        /// <param name="dsnUri">The DSN of the project</param>
+        /// <param name="option">The option of the client. Leave it null for default values.</param>
 		public Unity3DRavenCS(string dsnUri, RavenOptionType option = null)
 		{
 			m_dsn = new DSN(dsnUri);
@@ -34,6 +39,13 @@ namespace Unity3DRavenCS {
 			}
 		}
 
+        /// <summary>
+        /// Capture a message and send it to sentry server.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="logType"></param>
+        /// <param name="tags"></param>
+        /// <returns>result id</returns>
 		public string CaptureMessage(string message, LogType logType=LogType.Error, Dictionary<string, string> tags=null)
 		{
 			string resultId = "";
@@ -48,11 +60,24 @@ namespace Unity3DRavenCS {
 			return resultId;
 		}
 
+        /// <summary>
+        /// Send the captured exception to sentry server.
+        /// </summary>
+        /// <param name="exception">Captured exception</param>
+        /// <param name="tags"></param>
+        /// <returns>result id</returns>
 		public string CaptureException(Exception exception, Dictionary<string, string> tags = null)
 		{
             return CaptureException(exception.Message, new System.Diagnostics.StackTrace(exception, true) , tags);
 		}
 
+        /// <summary>
+        /// Send an exception message with stack trace to sentry server.
+        /// </summary>
+        /// <param name="message">The description of the captured exception</param>
+        /// <param name="stackTrace">The stack trace of the captured exception</param>
+        /// <param name="tags"></param>
+        /// <returns></returns>
         public string CaptureException(string message, string stackTrace, Dictionary<string, string> tags = null)
         {
             string resultId = "";
@@ -67,6 +92,13 @@ namespace Unity3DRavenCS {
             return resultId;
         }
 
+        /// <summary>
+        /// Send an exception message with stack trace to sentry server.
+        /// </summary>
+        /// <param name="message">The description of the captured exception</param>
+        /// <param name="stackTrace">The stack trace of the captured exception</param>
+        /// <param name="tags"></param>
+        /// <returns>result id</returns>
         public string CaptureException(string message, System.Diagnostics.StackTrace stackTrace, Dictionary<string, string> tags = null)
         {
             string resultId = "";
