@@ -59,9 +59,9 @@ namespace Unity3DRavenCS {
 
             if (m_valid)
             {
-                ExceptionPacket paket = new ExceptionPacket(message, stackTrace, tags);
+                ExceptionPacket packet = new ExceptionPacket(message, stackTrace, tags);
 
-                resultId = Send(paket.ToJson());
+                resultId = Send(packet.ToJson());
             }
 
             return resultId;
@@ -73,9 +73,9 @@ namespace Unity3DRavenCS {
 
             if (m_valid)
             {
-                ExceptionPacket paket = new ExceptionPacket(message, stackTrace, tags);
+                ExceptionPacket packet = new ExceptionPacket(message, stackTrace, tags);
 
-                resultId = Send(paket.ToJson());
+                resultId = Send(packet.ToJson());
             }
 
             return resultId;
