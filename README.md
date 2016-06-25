@@ -26,7 +26,7 @@ catch (Exception e)
 
 
 You can also send all log messages including unhandled exceptions to sentry automatically by providing a log handler.
-``` charp
+``` csharp
 public void LogHandler(string condition, string stackTrace, LogType type)
 {
     if (type == LogType.Exception)
