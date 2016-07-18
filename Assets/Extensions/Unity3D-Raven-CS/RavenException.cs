@@ -5,29 +5,32 @@ namespace Unity3DRavenCS
 {
 	public class RavenException
 	{
-        public RavenStackTrace stacktrace;
-        public string value;
-        public string type;
+        [JsonProperty(PropertyName = "stacktrace")]
+        private RavenStackTrace m_stacktrace;
+        [JsonProperty(PropertyName = "value")]
+        private string m_value;
+        [JsonProperty(PropertyName = "type")]
+        private string m_type;
 		
 		public RavenException(Exception exception)
 		{
-            this.stacktrace = new RavenStackTrace(exception);
-            this.value = exception.Message;
-            this.type = exception.GetType().ToString();
+            m_stacktrace = new RavenStackTrace(exception);
+            m_value = exception.Message;
+            m_type = exception.GetType().ToString();
         }
 
         public RavenException(string message, string stackTrace)
         {
-            this.stacktrace = new RavenStackTrace(stackTrace);
-            this.value = message;
-            this.type = message;
+            m_stacktrace = new RavenStackTrace(stackTrace);
+            m_value = message;
+            m_type = message;
         }
 
         public RavenException(string message, System.Diagnostics.StackTrace stackTrace)
         {
-            this.stacktrace = new RavenStackTrace(stackTrace);
-            this.value = message;
-            this.type = message;
+            m_stacktrace = new RavenStackTrace(stackTrace);
+            m_value = message;
+            m_type = message;
         }
     }
 }

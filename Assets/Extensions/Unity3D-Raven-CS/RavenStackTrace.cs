@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace Unity3DRavenCS
 {
@@ -30,15 +31,16 @@ namespace Unity3DRavenCS
                 this.colno = colno;
             }
 		}
-			
-		public List<RavenFrame> frames = new List<RavenFrame>();
+
+        [JsonProperty(PropertyName = "frames")]
+        private List<RavenFrame> m_frames = new List<RavenFrame>();
 
 		public RavenStackTrace(Exception exception)
 		{
 			StackTrace stackTrace = new StackTrace(exception, true);
 			foreach (var frame in stackTrace.GetFrames()) 
 			{
-				frames.Add(new RavenFrame(frame));
+				m_frames.Add(new RavenFrame(frame));
 			}
 		}
 
@@ -46,7 +48,7 @@ namespace Unity3DRavenCS
         {
             foreach (var frame in stackTrace.GetFrames())
             {
-                frames.Add(new RavenFrame(frame));
+                m_frames.Add(new RavenFrame(frame));
             }
         }
 
@@ -81,7 +83,7 @@ namespace Unity3DRavenCS
                     string filename = groupCount > 2 ? match.Groups[2].Value : "";
                     int lineno = groupCount > 3 ? Convert.ToInt32(match.Groups[3].Value) : 0;
                     int colno = 0;
-                    frames.Add(new RavenFrame(filename, function, lineno, colno));
+                    m_frames.Add(new RavenFrame(filename, function, lineno, colno));
                 }
             }
         }

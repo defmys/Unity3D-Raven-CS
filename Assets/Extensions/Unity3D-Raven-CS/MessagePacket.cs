@@ -14,7 +14,8 @@ namespace Unity3DRavenCS
             public string version;
         }
 
-        public SDK sdk = new SDK();
+        [JsonProperty(PropertyName = "sdk")]
+        protected SDK m_sdk = new SDK();
         
         public struct Device
         {
@@ -23,26 +24,32 @@ namespace Unity3DRavenCS
             public string build;
         }
 
-        public Device device = new Device();
+        [JsonProperty(PropertyName = "device")]
+        protected Device m_device = new Device();
 
-        public string event_id;
-        public string message;
-        public string timestamp;
-        public string platform;
-        public Dictionary<string, string> tags;
+        [JsonProperty(PropertyName = "event_id")]
+        protected string m_eventID;
+        [JsonProperty(PropertyName = "message")]
+        protected string m_message;
+        [JsonProperty(PropertyName = "timestamp")]
+        protected string m_timestamp;
+        [JsonProperty(PropertyName = "platform")]
+        protected string m_platform;
+        [JsonProperty(PropertyName = "tags")]
+        protected Dictionary<string, string> m_tags;
 
         public Packet(string message, Dictionary<string, string> tags)
         {
-            this.event_id = System.Guid.NewGuid().ToString("N");
-            this.message = message;
-            this.platform = "csharp";
-            this.sdk.name = "Unity3D-Raven-CS";
-            this.sdk.version = Version.VERSION;
-            this.timestamp = DateTime.UtcNow.ToString("s");
-            this.device.name = "";
-            this.device.version = "0";
-            this.device.build = "";
-            this.tags = tags;
+            m_eventID = Guid.NewGuid().ToString("N");
+            m_message = message;
+            m_platform = "csharp";
+            m_sdk.name = "Unity3D-Raven-CS";
+            m_sdk.version = Version.VERSION;
+            m_timestamp = DateTime.UtcNow.ToString("s");
+            m_device.name = "";
+            m_device.version = "0";
+            m_device.build = "";
+            m_tags = tags;
         }
 
         public virtual string ToJson()
@@ -53,25 +60,28 @@ namespace Unity3DRavenCS
 
 	public class MessagePacket: Packet
 	{
-		public string level;
-		public string logger;
-        public RavenStackTrace stacktrace;
+        [JsonProperty(PropertyName = "level")]
+        private string m_level;
+        [JsonProperty(PropertyName = "logger")]
+        private string m_logger;
+        [JsonProperty(PropertyName = "stacktrace")]
+        private RavenStackTrace m_stacktrace;
 
         public MessagePacket(string message, LogType logType, Dictionary<string, string> tags, string stackTrace): base(message, tags)
 		{
-            this.level = ToLogLevelFromLogType(logType);
+            m_level = ToLogLevelFromLogType(logType);
             if (!string.IsNullOrEmpty(stackTrace))
             {
-                this.stacktrace = new RavenStackTrace(stackTrace);
+                m_stacktrace = new RavenStackTrace(stackTrace);
             }
 		}
 
         public MessagePacket(string message, LogType logType, Dictionary<string, string> tags, System.Diagnostics.StackTrace stackTrace) : base(message, tags)
         {
-            this.level = ToLogLevelFromLogType(logType);
+            this.m_level = ToLogLevelFromLogType(logType);
             if (stackTrace != null)
             {
-                this.stacktrace = new RavenStackTrace(stackTrace);
+                m_stacktrace = new RavenStackTrace(stackTrace);
             }
         }
 
@@ -102,21 +112,22 @@ namespace Unity3DRavenCS
  
     public class ExceptionPacket: Packet
     {
-        public RavenException exception;
+        [JsonProperty(PropertyName = "exception")]
+        private RavenException m_exception;
 
         public ExceptionPacket(Exception exception, Dictionary<string, string> tags): base(exception.Message, tags)
         {
-            this.exception = new RavenException(exception);
+            this.m_exception = new RavenException(exception);
         }
 
         public ExceptionPacket(string message, string stackTrace, Dictionary<string, string> tags) : base(message, tags)
         {
-            this.exception = new RavenException(message, stackTrace);
+            this.m_exception = new RavenException(message, stackTrace);
         }
 
         public ExceptionPacket(string message, System.Diagnostics.StackTrace stackTrace, Dictionary<string, string> tags) : base(message, tags)
         {
-            this.exception = new RavenException(message, stackTrace);
+            this.m_exception = new RavenException(message, stackTrace);
         }
     }
 
