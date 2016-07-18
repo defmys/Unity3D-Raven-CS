@@ -60,12 +60,14 @@ namespace Unity3DRavenCS
 
 	public class MessagePacket: Packet
 	{
+#pragma warning disable 0414
         [JsonProperty(PropertyName = "level")]
         private string m_level;
         [JsonProperty(PropertyName = "logger")]
         private string m_logger;
         [JsonProperty(PropertyName = "stacktrace")]
         private RavenStackTrace m_stacktrace;
+#pragma warning restore 0414
 
         public MessagePacket(string message, LogType logType, Dictionary<string, string> tags, string stackTrace): base(message, tags)
 		{
@@ -112,8 +114,10 @@ namespace Unity3DRavenCS
  
     public class ExceptionPacket: Packet
     {
+#pragma warning disable 0414
         [JsonProperty(PropertyName = "exception")]
         private RavenException m_exception;
+#pragma warning restore 0414
 
         public ExceptionPacket(Exception exception, Dictionary<string, string> tags): base(exception.Message, tags)
         {

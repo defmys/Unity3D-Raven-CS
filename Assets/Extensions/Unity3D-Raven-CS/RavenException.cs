@@ -5,14 +5,16 @@ namespace Unity3DRavenCS
 {
 	public class RavenException
 	{
+#pragma warning disable 0414
         [JsonProperty(PropertyName = "stacktrace")]
         private RavenStackTrace m_stacktrace;
         [JsonProperty(PropertyName = "value")]
         private string m_value;
         [JsonProperty(PropertyName = "type")]
         private string m_type;
-		
-		public RavenException(Exception exception)
+#pragma warning restore 0414
+
+        public RavenException(Exception exception)
 		{
             m_stacktrace = new RavenStackTrace(exception);
             m_value = exception.Message;
