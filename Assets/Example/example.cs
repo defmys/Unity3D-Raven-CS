@@ -13,26 +13,10 @@ public class example : MonoBehaviour {
 
         // Create some tags that need to be sent with log messages.
         m_tags = new Dictionary<string, string>();
-        m_tags.Add("playTime", Time.realtimeSinceStartup.ToString());
-        m_tags.Add("time", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff"));
-
-        m_tags.Add("ProcessorType", SystemInfo.processorType);
-        m_tags.Add("ProcessorCount", SystemInfo.processorCount.ToString());
-
-        m_tags.Add("Device-Uid", SystemInfo.deviceUniqueIdentifier);
         m_tags.Add("Device-Model", SystemInfo.deviceModel);
         m_tags.Add("Device-Name", SystemInfo.deviceName);
         m_tags.Add("OS", SystemInfo.operatingSystem);
         m_tags.Add("MemorySize", SystemInfo.systemMemorySize.ToString());
-
-        m_tags.Add("GPU-Memory", SystemInfo.graphicsMemorySize.ToString());
-        m_tags.Add("GPU-Name", SystemInfo.graphicsDeviceName);
-        m_tags.Add("GPU-Vendor", SystemInfo.graphicsDeviceVendor);
-        m_tags.Add("GPU-VendorID", SystemInfo.graphicsDeviceVendorID.ToString());
-        m_tags.Add("GPU-id", SystemInfo.graphicsDeviceID.ToString());
-        m_tags.Add("GPU-Version", SystemInfo.graphicsDeviceVersion);
-        m_tags.Add("GPU-ShaderLevel", SystemInfo.graphicsShaderLevel.ToString());
-
 
 
         // =========================================================================================================
