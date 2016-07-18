@@ -55,13 +55,27 @@ namespace Unity3DRavenCS
 	{
 		public string level;
 		public string logger;
+        public RavenStackTrace stacktrace;
 
-        public MessagePacket(string message, LogType logType, Dictionary<string, string> tags): base(message, tags)
+        public MessagePacket(string message, LogType logType, Dictionary<string, string> tags, string stackTrace): base(message, tags)
 		{
-			this.level = ToLogLevelFromLogType(logType);
+            this.level = ToLogLevelFromLogType(logType);
+            if (!string.IsNullOrEmpty(stackTrace))
+            {
+                this.stacktrace = new RavenStackTrace(stackTrace);
+            }
 		}
 
-		private string ToLogLevelFromLogType(LogType logType)
+        public MessagePacket(string message, LogType logType, Dictionary<string, string> tags, System.Diagnostics.StackTrace stackTrace) : base(message, tags)
+        {
+            this.level = ToLogLevelFromLogType(logType);
+            if (stackTrace != null)
+            {
+                this.stacktrace = new RavenStackTrace(stackTrace);
+            }
+        }
+
+        private string ToLogLevelFromLogType(LogType logType)
 		{
 			string logLevel;
 			switch (logType) 

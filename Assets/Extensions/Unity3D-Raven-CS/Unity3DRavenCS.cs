@@ -45,20 +45,43 @@ namespace Unity3DRavenCS {
         /// <param name="message"></param>
         /// <param name="logType"></param>
         /// <param name="tags"></param>
+        /// <param name="stackTrace"></param>
         /// <returns>result id</returns>
-		public string CaptureMessage(string message, LogType logType=LogType.Error, Dictionary<string, string> tags=null)
+		public string CaptureMessage(string message, LogType logType=LogType.Error, Dictionary<string, string> tags=null, string stackTrace=null)
 		{
 			string resultId = "";
 
 			if (m_valid) 
 			{
-				MessagePacket packet = new MessagePacket(message, logType, tags);
+				MessagePacket packet = new MessagePacket(message, logType, tags, stackTrace);
 
 				resultId = Send(packet.ToJson());
 			}
 
 			return resultId;
 		}
+
+        /// <summary>
+        /// Capture a message with System.Diagnostics.StackTrace
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="logType"></param>
+        /// <param name="tags"></param>
+        /// <param name="stackTrace"></param>
+        /// <returns>result id</returns>
+        public string CaptureMessageWithSysStack(string message, LogType logType = LogType.Error, Dictionary<string, string> tags = null, System.Diagnostics.StackTrace stackTrace = null)
+        {
+            string resultId = "";
+
+            if (m_valid)
+            {
+                MessagePacket packet = new MessagePacket(message, logType, tags, stackTrace);
+
+                resultId = Send(packet.ToJson());
+            }
+
+            return resultId;
+        }
 
         /// <summary>
         /// Send the captured exception to sentry server.

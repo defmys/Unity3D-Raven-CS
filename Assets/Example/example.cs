@@ -22,6 +22,8 @@ public class example : MonoBehaviour {
         // =========================================================================================================
         // Capture message
         m_client.CaptureMessage("Hello, world!", LogType.Log, m_tags);
+        // Capture message with System.Diagnostics.StackTrace
+        m_client.CaptureMessageWithSysStack("Stack Trace.", LogType.Log, null, new System.Diagnostics.StackTrace(true));
 
         // Capture exception
         try
@@ -69,7 +71,7 @@ public class example : MonoBehaviour {
         }
         else
         {
-            m_client.CaptureMessage(condition, type, m_tags);
+            m_client.CaptureMessage(condition, type, m_tags, stackTrace);
         }
     }
 
