@@ -5,8 +5,12 @@ Directly import the package into your project. The example folder can be omitted
 
 ## How To Use
 ``` csharp
-// Create raven client
-Unity3DRavenCS.Unity3DRavenCS client = new Unity3DRavenCS.Unity3DRavenCS(\*DSN*\);
+// Create a new Unity3DRavenCS instance before using it.
+// A gameobject will be created in scene and won't be destroyed utill the game ends.
+// All messages captured by Unity3DRavenCS instance are sent to sentry server asynchronously without blocking the main thread.
+Unity3DRavenCS.Unity3DRavenCS.NewInstance(/*DSN*/);
+
+Unity3DRavenCS.Unity3DRavenCS client = Unity3DRavenCS.Unity3DRavenCS.instance;
 
 // Send message to sentry server.
 client.CaptureMessage("Hello, world!", LogType.Log);
