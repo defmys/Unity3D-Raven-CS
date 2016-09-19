@@ -8,8 +8,10 @@ public class example : MonoBehaviour {
 
     void Start()
     {
-        // Create a raven client with DSN uri.
-		m_client = new Unity3DRavenCS.Unity3DRavenCS("http://ab02bafeb811496c825b4f22631f3ea3:81efdf5ff4f34aeb8e4bb20b27d286eb@192.168.1.109:9000/2");
+        // Create a new Unity3DRavenCS instance before using it.
+        Unity3DRavenCS.Unity3DRavenCS.NewInstance("http://ab02bafeb811496c825b4f22631f3ea3:81efdf5ff4f34aeb8e4bb20b27d286eb@192.168.1.109:9000/2");
+
+        m_client = Unity3DRavenCS.Unity3DRavenCS.instance;
 
         // Create some tags that need to be sent with log messages.
         m_tags = new Dictionary<string, string>();
