@@ -87,10 +87,10 @@ namespace Unity3DRavenCS {
                 HttpClient httpClient = m_requestList[idx];
                 if (httpClient != null)
                 {
-                    if (httpClient.www.isDone)
+                    if (httpClient.uwr.isDone)
                     {
-                        // ResponsePacket responsePacket = JsonConvert.DeserializeObject<ResponsePacket>(httpClient.www.text);
-                        // string resultId = responsePacket.id;
+                        //ResponsePacket responsePacket = JsonConvert.DeserializeObject<ResponsePacket>(httpClient.uwr.downloadHandler.text);
+                        //string resultId = responsePacket.id;
 
                         m_requestList[idx] = null;
                     }
@@ -209,7 +209,7 @@ namespace Unity3DRavenCS {
 
     class HttpClient
     {
-        public UnityWebRequest www { get; private set; }
+        public UnityWebRequest uwr { get; private set; }
         private DSN m_dsn;
         private string m_payload;
         private RavenOptionType m_option;
@@ -257,19 +257,19 @@ namespace Unity3DRavenCS {
             }
 
             startTime = Time.time;
-            www = new UnityWebRequest(m_dsn.sentryUri);
+            uwr = new UnityWebRequest(m_dsn.sentryUri);
             foreach(var head in headers)
             {
-                www.SetRequestHeader(head.Key, head.Value);
+                uwr.SetRequestHeader(head.Key, head.Value);
             }
             UploadHandler uploader = new UploadHandlerRaw(requestBuffer);
-            www.uploadHandler = uploader;
-            yield return www.SendWebRequest();
+            uwr.uploadHandler = uploader;
+            yield return uwr.SendWebRequest();
         }
 
         public void Dispose()
         {
-            www.Dispose();
+            uwr.Dispose();
         }
     }
 }
