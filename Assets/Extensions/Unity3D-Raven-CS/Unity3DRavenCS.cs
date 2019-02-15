@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 using System.IO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using ICSharpCode.SharpZipLib.GZip;
 
 namespace Unity3DRavenCS {
@@ -86,7 +86,7 @@ namespace Unity3DRavenCS {
                 HttpClient httpClient = m_requestList[idx];
                 if (httpClient != null)
                 {
-                    if (httpClient.webRequest.isDone)
+                    if (httpClient.www.isDone)
                     {
                         // ResponsePacket responsePacket = JsonConvert.DeserializeObject<ResponsePacket>(httpClient.www.text);
                         // string resultId = responsePacket.id;
@@ -208,7 +208,7 @@ namespace Unity3DRavenCS {
 
     class HttpClient
     {
-        public UnityWebRequest webRequest { get; private set; }
+        public WWW www { get; private set; }
         private DSN m_dsn;
         private string m_payload;
         private RavenOptionType m_option;
@@ -223,44 +223,46 @@ namespace Unity3DRavenCS {
 
         public IEnumerator AsyncSend()
         {
-            byte[] payloadBytes = null;
-
-            webRequest = new UnityWebRequest(m_dsn.sentryUri, UnityWebRequest.kHttpVerbPOST);
-            webRequest.SetRequestHeader("Accept", "application/json");
-            webRequest.SetRequestHeader("Content-Type", "application/json; charset=utf-8");
-            webRequest.SetRequestHeader("X-Sentry-Auth", m_dsn.XSentryAuthHeader());
-            webRequest.SetRequestHeader("User-Agent", m_dsn.UserAgent());
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Accept", "application/json");
+            headers.Add("Content-Type", "application/json; charset=utf-8");
+            headers.Add("X-Sentry-Auth", m_dsn.XSentryAuthHeader());
+            headers.Add("User-Agent", m_dsn.UserAgent());
 
             if (m_option.compression)
             {
-                webRequest.SetRequestHeader("Content-Encoding", "gzip");
-                using (MemoryStream requestStream = new MemoryStream())
+                headers.Add("Content-Encoding", "gzip");
+            }
+
+            byte[] requestBuffer = null;
+            using (MemoryStream requestStream = new MemoryStream())
+            {
+                if (m_option.compression)
                 {
+                    byte[] payloadBuffer = System.Text.Encoding.UTF8.GetBytes(m_payload);
                     using (GZipOutputStream gzipStream = new GZipOutputStream(requestStream))
                     {
-                        byte[] payloadBuffer = System.Text.Encoding.UTF8.GetBytes(m_payload);
                         gzipStream.Write(payloadBuffer, 0, payloadBuffer.Length);
                     }
-
-                    payloadBytes = requestStream.ToArray();
                 }
+                else
+                {
+                    using (StreamWriter streamWriter = new StreamWriter(requestStream))
+                    {
+                        streamWriter.Write(m_payload);
+                    }
+                }
+                requestBuffer = requestStream.ToArray();
             }
-            else
-            {
-                payloadBytes = System.Text.Encoding.UTF8.GetBytes(m_payload);
-            }
-
-            webRequest.uploadHandler = new UploadHandlerRaw(payloadBytes);
-            webRequest.downloadHandler = new DownloadHandlerBuffer();
 
             startTime = Time.time;
-
-            yield return webRequest.SendWebRequest();
+            www = new WWW(m_dsn.sentryUri, requestBuffer, headers);
+            yield return www;
         }
 
         public void Dispose()
         {
-            webRequest.Dispose();
+            www.Dispose();
         }
     }
 }
