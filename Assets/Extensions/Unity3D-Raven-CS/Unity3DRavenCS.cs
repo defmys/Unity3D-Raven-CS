@@ -258,7 +258,8 @@ namespace Unity3DRavenCS {
 
             startTime = Time.time;
             uwr = new UnityWebRequest(m_dsn.sentryUri);
-            foreach(var head in headers)
+            uwr.method = "POST";
+            foreach (var head in headers)
             {
                 uwr.SetRequestHeader(head.Key, head.Value);
             }
