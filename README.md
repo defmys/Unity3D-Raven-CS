@@ -6,7 +6,7 @@ Directly import the package into your project. The example folder can be omitted
 ## How To Use
 ``` csharp
 // Create a new Unity3DRavenCS instance before using it.
-// A gameobject will be created in scene and won't be destroyed utill the game ends.
+// A gameobject will be created in scene and won't be destroyed until the game ends.
 // All messages captured by Unity3DRavenCS instance are sent to sentry server asynchronously without blocking the main thread.
 Unity3DRavenCS.Unity3DRavenCS.NewInstance(/*DSN*/);
 
