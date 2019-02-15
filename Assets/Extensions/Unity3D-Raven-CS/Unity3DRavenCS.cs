@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.IO;
 using System;
 using System.Collections;
@@ -208,7 +209,7 @@ namespace Unity3DRavenCS {
 
     class HttpClient
     {
-        public WWW www { get; private set; }
+        public UnityWebRequest www { get; private set; }
         private DSN m_dsn;
         private string m_payload;
         private RavenOptionType m_option;
@@ -256,8 +257,14 @@ namespace Unity3DRavenCS {
             }
 
             startTime = Time.time;
-            www = new WWW(m_dsn.sentryUri, requestBuffer, headers);
-            yield return www;
+            www = new UnityWebRequest(m_dsn.sentryUri);
+            foreach(var head in headers)
+            {
+                www.SetRequestHeader(head.Key, head.Value);
+            }
+            UploadHandler uploader = new UploadHandlerRaw(requestBuffer);
+            www.uploadHandler = uploader;
+            yield return www.SendWebRequest();
         }
 
         public void Dispose()
